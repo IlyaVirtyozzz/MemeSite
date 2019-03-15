@@ -1,10 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-6">
+            <ul class="list-group">
+                <li class="list-group-item">Лидеры</li>
+
+                {% for n,i in enumerate(leaders) %}
+                {% if n == 0 %}
+                <li class="list-group-item list-group-item-dark">
+                    <span class="badge badge-pill badge-danger">{{n+1}}</span> {{i[0]}} : {{i[1]}}
+                </li>
+                {% elif n == 1 %}
+                <li class="list-group-item list-group-item-dark">
+                    <span class="badge badge-warning">{{n+1}}</span> {{i[0]}} : {{i[1]}}
+                </li>
+                {% elif n == 2 %}
+                <li class="list-group-item list-group-item-dark">
+                    <span class="badge badge-pill badge-success">{{n+1}}</span> {{i[0]}} : {{i[1]}}
+                </li>
+                {% else %}
+                <li class="list-group-item list-group-item-dark">
+                    <span class="badge badge-pill badge-primary">{{n+1}}</span> {{i[0]}} : {{i[1]}}
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

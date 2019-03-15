@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-2 ">
+        <div class="list-group" id="list-tab" role="tablist">
+
+            <a class="list-group-item list-group-item-action bg-info active" id="list-profile-list" data-toggle="list"
+               href="#list-profile" role="tab" aria-controls="profile">Профиль</a>
+
+            <a class="list-group-item list-group-item-action bg-info" id="list-answer-list" data-toggle="list"
+               href="#list-answer" role="tab" aria-controls="answer">Мои ответы</a>
+            <a class="list-group-item list-group-item-action bg-info" id="list-question-list" data-toggle="list"
+               href="#list-question" role="tab" aria-controls="question">Мои вопросы</a>
+
+            <a class="list-group-item list-group-item-action bg-info" id="list-settings-list" data-toggle="list"
+               href="#list-settings" role="tab" aria-controls="settings">Настройки</a>
+
+        </div>
+    </div>
+    <form class="form-settings" method="post" enctype="multipart/form-data">
+        <div class="col">
+            <div class="tab-content" id="nav-profile">
+                <div class="tab-pane fade show active" id="list-profile" role="tabpanel"
+                     aria-labelledby="list-profile-list">
+                    <div class="container">
+                        <div class="row justify-content-md-center">
+                            <img src="{{user_model.photo}}" class="rounded" width="200" height="200" alt="">
+                        </div>
+
+                        <div class="row ">
+                            <div class="col">
+                                <div class="alert alert-info" role="alert">Имя: {{user_model.name}}</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="alert alert-info" role="alert">Email : {{user_model.email}}</div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="alert alert-info" role="alert">Пол : {{user_model.sex}}</div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="alert alert-info" role="alert">Ваши баллы : {{user_model.point}}</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="list-answer" role="tabpanel"
+                     aria-labelledby="list-answer-list">...
+                </div>
+                <div class="tab-pane fade" id="list-question" role="tabpanel"
+                     aria-labelledby="list-question-list">...
+                </div>
+                <div class="tab-pane fade" id="list-settings" role="tabpanel"
+                     aria-labelledby="list-settings-list">
+                    <div class="row">
+                        <div class="col-4">
+                            <button type="button" class="btn btn-info" data-toggle="modal"
+                                    data-target="#exampleModalname">
+                                Изменить имя
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-info" data-toggle="modal"
+                                    data-target="#exampleModalemail">
+                                Изменить почту
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-info" data-toggle="modal"
+                                    data-target="#exampleModalpassword">
+                                Изменить пароль
+                            </button>
+                        </div>
+
+                    </div>
+
+
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="photo">Выберите файл</label>
+                            <input type="file" class="form-control-file" id="photo" name="file">
+                        </div>
+                        <button type="submit" class="btn btn-info">Отправить</button>
+                    </form>
+
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalname" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabelname">Изменение имени</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Новое имя "
+                                       name="NewName"
+                                       aria-label="NewName">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Закрыть
+                                </button>
+                                <button type="submit" class="btn btn-info">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="exampleModalemail" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabelemail">Изменение почты</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Новая почта"
+                                       name="NewEmail"
+                                       aria-label="NewEmail">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Закрыть
+                                </button>
+                                <button type="submit" class="btn btn-info">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="exampleModalpassword" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabelpassword">Изменение пароля</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Старый пароль"
+                                       name="OldPassword"
+                                       aria-label="OldPassword">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Новый пароль"
+                                       name="NewPassword"
+                                       aria-label="NewPassword">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Закрыть
+                                </button>
+                                <button type="submit" class="btn btn-info">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h4>{{text}}</h4>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+
+{% endblock %}

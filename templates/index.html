@@ -1,13 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Привет, {{ username }}!</h1>
-<a href="/add_news">Удалить вопрос</a>
-{% for item in news %}
-<div class="alert alert-dark" role="alert">
-    <h2>{{item[1]}}</h2>
-    <div>{{item[2]}}</div>
-    <a href="/delete_news/{{item[0]}}">Удалить вопрос</a>
+<div class="col-xs-12 col-sm-9">
+
+    <div class="jumbotron">
+        <h1>Приветик, Дружище!</h1>
+        <p>Если ты думаешь что лучше всех разбираешься в мемах, то помогай другим познавать мем культуру!
+            Всё же, если ты пришёл сюда за помощью, по оставляй свой вопросик! Кто-нибудь на него обязательно
+            ответит!(Но это не точно)</p>
+    </div>
+    <div class="row">
+        <div class="col-6 col-sm-6 col-lg-4">
+            <h2>Есть вопрос?</h2>
+            <p>Если у тебя есть вопросы, оставляй их тут. </p>
+            <p><a class="btn btn-default" href="#" role="button">Оставить вопрос »</a></p>
+        </div><!--/span-->
+        <div class="col-6 col-sm-6 col-lg-4">
+            <h2>Я помогатор, дай помочь!</h2>
+            <p>Рад тебя видеть мемолог, нажми на строчку чуть ниже и помоги другим! </p>
+            <p><a class="btn btn-default" href="#" role="button">Помочь »</a></p>
+        </div><!--/span-->
+        <div class="col-6 col-sm-6 col-lg-4">
+            <h2>Хочу поглазеть</h2>
+            <p>Давай быстренько смотри чё по чём и займись уже делом!</p>
+            <p><a class="btn btn-default" href="#" role="button">Ну-ка ну-ка »</a></p>
+        </div><!--/span-->
+    </div><!--/row-->
 </div>
-{% endfor %}
+
 {% endblock %}

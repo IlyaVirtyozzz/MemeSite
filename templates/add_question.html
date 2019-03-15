@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="" method="post">
+    <div class="container">
+
+        <div class="col-sm-8 blog-main">
+            <div class="row">
+                <h1>Добавление новости</h1>
+                <div class="container">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Заголовок <br> (<80симв.)</span>
+                        </div>
+                        <textarea class="form-control" name='title' aria-label="With textarea"></textarea>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Вопрос <br> (<2000симв.)</span>
+                        </div>
+                        <textarea class="form-control" name='text' aria-label="With textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Выберите категорию:</label>
+                <select class="form-control" id="exampleFormControlSelect1" name="category">
+                    <option>Политика</option>
+                    <option>Животные</option>
+                    <option>Игры</option>
+                    <option>Русские</option>
+                    <option>18+</option>
+                    <option>Аниме</option>
+                    <option>Ностальгия</option>
+                    <option>Техно-научные</option>
+                    <option>АнтиK-pop</option>
+                    <option>Другие</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <h3>Сколько готовы пожертвовать?</h3>
+                <div class="col-2">
+
+                    <input type="text" name="point" class="form-control" aria-label="Point">
+                </div>
+                <h6>(Чем больше, тем лучше)</h6>
+            </div>
+            <h3>{{text}}</h3>
+            <button type="submit" class="btn btn-info btn-lg btn-block">Задать вопрос</button>
+
+        </div>
+
+    </div>
+</form>
+{% endblock %}

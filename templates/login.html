@@ -1,35 +1,30 @@
 {% extends "base.html" %}
- 
+
 {% block content %}
-    <body class="text-center">
-<script type="text/javascript" async="" src="https://mc.yandex.ru/metrika/watch.js"></script><script async="" src="https://www.google-analytics.com/analytics.js"></script><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<body class="text-center">
+<div class="container">
+    <div class="row justify-content-md-center">
+        <form class="form-signin" method="post">
+            <img class="mb-4" src="https://pp.userapi.com/c851016/v851016027/9e491/qKqwxN08oGk.jpg?ava=1" alt=""
+                 width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
+            <label for="inputEmail" class="sr-only">Почта</label>
+            <input type="email" id="inputEmail" class="form-control" name="inputEmail" placeholder="Email address"
+                   required="" autofocus="">
+            <label for="inputPassword" class="sr-only">Пароль</label>
+            <input type="password" id="inputPassword" class="form-control" name="inputPassword" placeholder="Password"
+                   required="">
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Запомнить
+                </label>
+            </div>
+            <h4>{{text}}</h4>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+            <p class="mt-5 mb-3 text-muted">© 2019</p>
+        </form>
 
-  ga('create', 'UA-4481610-59', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
-<!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter39705265 = new Ya.Metrika({ id:39705265, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/39705265" style="position:absolute; left:-9999px;" alt="Yandex.Metrika" /></div></noscript> <!-- /Yandex.Metrika counter -->
-    <form class="form-signin">
-      <img class="mb-4" src="https://pp.userapi.com/c851016/v851016027/9e491/qKqwxN08oGk.jpg?ava=1" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
-      <label for="inputEmail" class="sr-only">Почта</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-      <label for="inputPassword" class="sr-only">Пароль</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Запомнить
-        </label>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
-      <p class="mt-5 mb-3 text-muted">© 2019</p>
-    </form>
-
-
+    </div>
+</div>
 </body>
 {% endblock %}
