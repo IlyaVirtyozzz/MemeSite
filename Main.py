@@ -1,5 +1,5 @@
 import datetime, os, time
-
+from functions import *
 from flask import url_for, request, render_template, redirect, session
 
 from database import *
@@ -16,13 +16,52 @@ def index():
         pass
 
 
-@app.route('/questions/<int:category_id>', methods=['GET', 'POST'])
-def questions(category_id):
+@app.route('/questions/<int:id_category>', methods=['GET', 'POST'])
+def questions(id_category=1):
+    questions = db.session.query(Memequestion).filter_by(id_category=id_category).all()
     if request.method == 'GET':
-        questions = db.session.query(Memequestion).filter_by(id=category_id).first()
-        return render_template('questions.html', title='Главная страница')
+        return render_template('questions.html', title='Вопросы', questions=questions, user_check=user_check,
+                               Memeuser=Memeuser, db=db, )
     if request.method == 'POST':
         pass
+
+
+@app.route('/question/<int:id_question>', methods=['GET', 'POST'])
+def question(id_question=1):
+    answers = db.session.query(Memeanswer).filter_by(id_question=id_question).all()
+    question = db.session.query(Memequestion).filter_by(id=id_question).first()
+    if request.method == 'GET':
+        return render_template('question.html', title='Вопрос', question=question, user_check=user_check,
+                               answers=answers,
+                               Memeuser=Memeuser, db=db, category=db.session.query(Memecategory))
+    if request.method == 'POST':
+
+        if request.form.get('text'):
+            answer = Memeanswer(id_user=session['user_id'], id_question=id_question, text=request.form.get('text'))
+            db.session.add(answer)
+            db.session.commit()
+    return render_template('question.html', title='Вопрос', question=question, user_check=user_check,
+                           Memeuser=Memeuser, db=db, answers=answers, category=db.session.query(Memecategory))
+
+
+@app.route('/delete_question/<int:id_question>', methods=['GET', 'POST'])
+def delete_question(id_question=1):
+    question = db.session.query(Memequestion).filter_by(id=id_question).first()
+    answers = db.session.query(Memeanswer).filter_by(id=id_question).all()
+    db.session.delete(question)
+    for i in answers:
+        db.session.delete(i)
+
+    db.session.commit()
+    return redirect('/profile')
+
+
+@app.route('/delete_answer/<int:id_question>/<int:id_answer>', methods=['GET', 'POST'])
+def delete_answer(id_question=1, id_answer=1):
+    answer = db.session.query(Memeanswer).filter_by(id=id_answer, id_question=id_question).first()
+    db.session.delete(answer)
+    db.session.commit()
+    return redirect('/profile')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -73,7 +112,7 @@ def add_question():
                                     text=text,
                                     point=points,
                                     active=True,
-                            id_category=id_category)
+                                    id_category=id_category)
 
             if int(user_model.point) < points:
                 text += 'Недостаточно pointов'
@@ -83,6 +122,7 @@ def add_question():
 
             db.session.add(question)
             db.session.commit()
+            return redirect('/question/{}'.format(question.id))
         else:
             text += 'Проверьте правильность введённых данных'
             return render_template('add_question.html', title='Добавить вопрос', text=text)
@@ -133,28 +173,27 @@ def help():
     return render_template('help.html', title='Помощь')
 
 
-# @app.route('/admin')
-# def admin():
-#     user_n = list(filter((lambda x: x[1] != 'admin'), (list(map((lambda x: (x[0], x[1])), users.get_all())))))
-#     news_n = [(x[0], len(news.get_all(x[0]))) for x in user_n]
-#
-#     return render_template('admin.html', title='Авторизация', users=user_n, news=news_n, len=len)
+@app.route('/admin')
+def admin_console():
+    return render_template('admin.html', title='Авторизация', users=user_n, news=news_n, len=len)
 
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    user_model = db.session.query(Memeuser).filter_by(id=session['user_id']).first()
+    user_model = user_check(session['user_id'], db, Memeuser)
+    questions = db.session.query(Memequestion).filter_by(id_user=user_model.id).all()
+    answers = db.session.query(Memeanswer).filter_by(id_user=user_model.id).all()
+
     if request.method == 'GET':
-        return render_template('profile.html', title='Профиль', user_model=user_model)
+        return render_template('profile.html', title='Профиль', user_model=user_model, questions=questions,
+                               category=db.session.query(Memecategory), answers=answers)
     elif request.method == 'POST':
         text = ''
         incorrect = False
-
         if request.form.get('NewName'):
             user_model.name = request.form.get('NewName')
             db.session.commit()
             session['username'] = user_model.name
-
         if request.form.get('NewEmail'):
             user_model.email = request.form.get('NewEmail')
             db.session.commit()
@@ -165,7 +204,7 @@ def profile():
         if request.files.get('file'):
             filename = 'static/{}'.format(user_model.id) + '/image_.' + \
                        request.files.get('file').mimetype.split('/')[1]
-            print(filename)
+
             user_model.photo = filename
 
             db.session.commit()
@@ -181,7 +220,7 @@ def profile():
             incorrect = True
 
         return render_template('profile.html', title='Профиль', text=text, incorrect=incorrect,
-                               user_model=user_model)
+                               user_model=user_model, category=db.session.query(Memecategory))
 
 
 @app.route('/logout')

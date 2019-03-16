@@ -6,7 +6,66 @@
     <div class="col-sm-8 blog-main">
         {% for question in questions %}
         <div class="container">
+            {% if question.active %}
+            <div class="p-3 mb-2 bg-primary text-white ">
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <div class="col ">
+                            <img src="http://127.0.0.1:8070/{{user_check(question.id_user, db, Memeuser).photo}}" class="rounded"
+                                 width="50"
+                                 height="50"
+                                 alt="">
 
+                            <h7>{{user_check(question.id_user,db, Memeuser).name}}</h7>
+                        </div>
+                        <div class="col"><h3>{{question.title}}</h3>
+                            <h5>{{question.text}}</h5>
+                        </div>
+
+                        <div class="col-auto">
+                            <h6>Доступно Баллов: {{question.point}}</h6>
+                            <span class="badge badge-info  ">
+                                <a class="text-white" href="/question/1">
+                                Открыть
+                                </a>
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            {% else %}
+
+            <div class="p-3 mb-2 bg-secondary text-white ">
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <div class="col ">
+                            <img src="http://127.0.0.1:8070/{{user_check(question.id_user, db, Memeuser).photo}}" class="rounded"
+                                 width="50"
+                                 height="50"
+                                 alt="">
+
+                            <h7>{{user_check(question.id_user,db, Memeuser).name}}</h7>
+                        </div>
+                        <div class="col"><h3>{{question.title}}</h3>
+                            <h5>{{question.text}}</h5>
+                        </div>
+
+                        <div class="col-auto">
+                            <h6>Доступно Баллов: {{question.point}}</h6>
+                            <span class="badge badge-info  ">
+                                <a class="text-white" href="/question/1">
+                                Открыть
+                                </a>
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

@@ -2,5 +2,84 @@
 {% block content %}
 
 
+<div class="container">
 
+
+    {% if question.active %}
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <div class="p-3 mb-2 bg-primary text-white ">
+                Вопрос Активен
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <div class="p-3 mb-2 bg-secondary text-white ">
+                Вопрос Неактивен
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col">
+            <div class="p-3 mb-2 bg-light text-dark">
+                <div class="row justify-content-md-center">
+                    <div class="col">
+                        <img src="http://127.0.0.1:8070/{{user_check(question.id_user,db,Memeuser).photo}}"
+                             class="rounded"
+                             width="50"
+                             height="50"
+                             alt="">
+                        <h7>{{user_check(question.id_user,db,Memeuser).name}}</h7>
+                        <h7>Категория:
+                            {{category.filter_by(id=question.id_category).first().category}}
+                        </h7>
+                    </div>
+                    <div class="col-9"><h3>{{question.title}}</h3>
+                        <h5>{{question.text}}</h5>
+                    </div>
+
+                    <div class="col-auto">
+                        <h6>Баллов : {{question.point}}</h6>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for answer in answers %}
+    <div class="container">
+        <div class="p-3 mb-2 bg-secondary text-white ">
+            <div class="container">
+                <div class="row justify-content-md">
+                    <div class="col ">
+                        <img src="http://127.0.0.1:8070/{{user_check(answer.id_user,db, Memeuser).photo}}" class="rounded" width="50"
+                             height="50"
+                             alt="">
+                        <h7>{{user_check(answer.id_user,db, Memeuser).name}}</h7>
+                    </div>
+                    <div class="col-9">
+                        <h5>{{answer.text}}</h5>
+                    </div>
+                    <div class="col-auto">
+                        <h6>Полученные баллы: {{question.point}}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <form method="post">
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Добавить комментарий</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" name='text' rows="3"></textarea>
+        </div>
+        <div class="row justify-content-md-center">
+            <button type="submit" class="btn btn-info">Добавить комментарий</button>
+        </div>
+    </form>
+</div>
+</div>
 {% endblock %}

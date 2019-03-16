@@ -39,6 +39,13 @@ class Memecategory(db.Model):
         return "<Memeuser {} {}>".format(self.id, self.category)
 
 
+class Admins(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    def __repr__(self):
+        return "<Admins {} {}>".format(self.id)
+
+
 class Memequestion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer, unique=False, nullable=False)
@@ -49,9 +56,9 @@ class Memequestion(db.Model):
     active = db.Column(db.Boolean)
 
     def __repr__(self):
-        return "<Memeuser {} {} {} {} {} {}>".format(self.id, self.name, self.email, self.password, self.sex,
+        return "<Memeuser {} {} {} {} {} {} {}>".format(self.id, self.id_user, self.title, self.text, self.id_category,
 
-                                                     self.point, self.active)
+                                                        self.point, self.active)
 
 
 def add_category():

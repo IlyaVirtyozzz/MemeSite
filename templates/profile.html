@@ -56,10 +56,145 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="list-answer" role="tabpanel"
-                     aria-labelledby="list-answer-list">...
+                     aria-labelledby="list-answer-list">
+                    <div class="col-sm-8 blog-main">
+                        {% for answer in answers%}
+                        <div class="container">
+                            <div class="p-3 mb-2 bg-primary text-white ">
+                                <div class="container">
+                                    <div class="row justify-content-md">
+                                        <div class="col ">
+                                            <h7>Ваш ответ</h7>
+
+                                        </div>
+                                        <div class="col">
+                                            <h5>{{answer.text}}</h5>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <h6>Получено Баллов: {{answer.point}}</h6>
+                                            <span class="badge badge-info  ">
+                                <a class="text-white" href="/question/{{answer.id_question}}">
+                                Открыть
+                                </a>
+
+                            </span>
+                                        </div>
+
+                                    </div>
+                                    <div class="row justify-content-md-center">
+
+                                        <span class="badge badge-info">
+                                        <a class="text-white"
+                                           href="/delete_answer/{{answer.id_question}}/{{answer.id}}">
+                                            Удалить
+                                        </a>
+                                             </span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="list-question" role="tabpanel"
-                     aria-labelledby="list-question-list">...
+                     aria-labelledby="list-question-list">
+                    <div class="col-sm-8 blog-main">
+                        {% for question in questions %}
+                        <div class="container">
+                            {% if question.active %}
+                            <div class="p-3 mb-2 bg-primary text-white ">
+                                <div class="container">
+                                    <div class="row justify-content-md">
+                                        <div class="col ">
+                                            <h7>Ваш вопрос</h7>
+                                            <h7>Категория:
+                                                {{category.filter_by(id=question.id_category).first().category}}
+                                            </h7>
+
+                                        </div>
+                                        <div class="col"><h3>{{question.title}}</h3>
+                                            <h5>{{question.text}}</h5>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <h6>Доступно Баллов: {{question.point}}</h6>
+                                            <span class="badge badge-info  ">
+                                <a class="text-white" href="/question/{{question.id}}">
+                                Открыть
+                                </a>
+
+                            </span>
+                                        </div>
+
+                                    </div>
+                                    <div class="row justify-content-md-center">
+
+                                        <span class="badge badge-info">
+                                        <a class="text-white" href="/delete_question/{{question.id}}">
+                                            Удалить
+                                        </a>
+                                             </span>
+                                    </div>
+                                    <div class="row justify-content-md-end">
+
+                                        <span class="badge badge-info">
+                                        <a class="text-white" href="/close_question/{{question.id}}">
+                                            Закрыть вопрос
+                                        </a>
+                                             </span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+
+                            <div class="p-3 mb-2 bg-secondary text-white ">
+                                <div class="container">
+                                    <div class="row justify-content-md">
+                                        <div class="col ">
+                                            <h7>Ваш вопрос</h7>
+                                            <h7>Категория:
+                                                {{category.filter_by(id=question.id_category).first().category}}
+                                            </h7>
+                                        </div>
+                                        <div class="col"><h3>{{question.title}}</h3>
+                                            <h5>{{question.text}}</h5>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <h6>Доступно Баллов: {{question.point}}</h6>
+                                            <span class="badge badge-info  ">
+                                <a class="text-white" href="/question/{{question.id}}">
+                                Открыть
+                                </a>
+
+                            </span>
+                                        </div>
+
+                                    </div>
+                                    <div class="row justify-content-md-center">
+
+                                        <span class="badge badge-info">
+                                        <a class="text-white" href="/delete_question/{{question.id}}">
+                                            Удалить
+                                        </a>
+                                             </span>
+                                    </div>
+                                    <div class="row justify-content-md-end">
+
+                                        <span class="badge badge-info">
+                                        <a class="text-white" href="/close_question/{{question.id}}">
+                                            Закрыть вопрос
+                                        </a>
+                                             </span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="list-settings" role="tabpanel"
                      aria-labelledby="list-settings-list">
