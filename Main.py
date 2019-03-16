@@ -1,10 +1,9 @@
 import datetime, os, time
 from functions import *
 from flask import url_for, request, render_template, redirect, session
-
+from constant import *
+from flask_sqlalchemy import sqlalchemy
 from database import *
-
-app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -13,12 +12,22 @@ def index():
     if request.method == 'GET':
         return render_template('index.html', title='Главная страница')
     if request.method == 'POST':
-        pass
+        if request.form.get('search'):
+            questions_search = []
+            questions = db.session.query(Memequestion).all()
+            for question in questions:
+                if request.form.get('search') in [x for x in question.title.split() if len(x) > 3]:
+                    questions_search.append(question)
+            return render_template('questions.html', title='Вопросы', questions=questions, user_check=user_check,
+                                   Memeuser=Memeuser, db=db, )
 
 
 @app.route('/questions/<int:id_category>', methods=['GET', 'POST'])
 def questions(id_category=1):
-    questions = db.session.query(Memequestion).filter_by(id_category=id_category).all()
+    if id_category == 1:
+        questions = db.session.query(Memequestion).all()
+    else:
+        questions = db.session.query(Memequestion).filter_by(id_category=id_category).all()
     if request.method == 'GET':
         return render_template('questions.html', title='Вопросы', questions=questions, user_check=user_check,
                                Memeuser=Memeuser, db=db, )
@@ -28,6 +37,7 @@ def questions(id_category=1):
 
 @app.route('/question/<int:id_question>', methods=['GET', 'POST'])
 def question(id_question=1):
+
     answers = db.session.query(Memeanswer).filter_by(id_question=id_question).all()
     question = db.session.query(Memequestion).filter_by(id=id_question).first()
     if request.method == 'GET':
@@ -46,6 +56,8 @@ def question(id_question=1):
 
 @app.route('/delete_question/<int:id_question>', methods=['GET', 'POST'])
 def delete_question(id_question=1):
+    if 'user_id' not in session:
+        return redirect('/error')
     question = db.session.query(Memequestion).filter_by(id=id_question).first()
     answers = db.session.query(Memeanswer).filter_by(id=id_question).all()
     db.session.delete(question)
@@ -58,6 +70,8 @@ def delete_question(id_question=1):
 
 @app.route('/delete_answer/<int:id_question>/<int:id_answer>', methods=['GET', 'POST'])
 def delete_answer(id_question=1, id_answer=1):
+    if 'user_id' not in session:
+        return redirect('/error')
     answer = db.session.query(Memeanswer).filter_by(id=id_answer, id_question=id_question).first()
     db.session.delete(answer)
     db.session.commit()
@@ -98,6 +112,10 @@ def register():
 @app.route('/add_question', methods=['GET', 'POST'])
 def add_question():
     text = ''
+
+    if 'user_id' not in session:
+        return redirect('/error')
+
     if request.method == 'GET':
         return render_template('add_question.html', title='Добавить вопрос')
     if request.method == 'POST':
@@ -138,7 +156,7 @@ def login():
         password = request.form.get('inputPassword')
         user_model = db.session.query(Memeuser).filter_by(email=email).first()
         if user_model and user_model.password == password:
-
+            session.clear()
             session['username'] = user_model.name
             session['user_id'] = user_model.id
             return redirect('/profile')
@@ -148,14 +166,19 @@ def login():
 
 @app.route('/leaders')
 def leaders():
+
     leaders = Memeuser.query.all()
     leaders_list = []
-
     for leader in leaders:
         leaders_list.append((leader.name, int(leader.point)))
 
     return render_template('leaders.html', title='Лидеры',
                            leaders=sorted(leaders_list, key=lambda x: x[1], reverse=True), enumerate=enumerate)
+
+
+@app.route('/error')
+def error():
+    return render_template('error.html', title='Информация')
 
 
 @app.route('/infocompany')
@@ -180,6 +203,8 @@ def admin_console():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    if 'user_id' not in session:
+        return redirect('/error')
     user_model = user_check(session['user_id'], db, Memeuser)
     questions = db.session.query(Memequestion).filter_by(id_user=user_model.id).all()
     answers = db.session.query(Memeanswer).filter_by(id_user=user_model.id).all()
@@ -202,9 +227,13 @@ def profile():
             db.session.commit()
 
         if request.files.get('file'):
-            filename = 'static/{}'.format(user_model.id) + '/image_.' + \
-                       request.files.get('file').mimetype.split('/')[1]
-
+            if request.files.get('file').mimetype.split('/')[1] in IMAGE_RESOLUTION:
+                filename = 'static/{}'.format(user_model.id) + '/image_.' + \
+                           request.files.get('file').mimetype.split('/')[1]
+            else:
+                text += 'Это разрешение не поддерживается'
+                return render_template('profile.html', title='Профиль', text=text, incorrect=incorrect,
+                                       user_model=user_model, category=db.session.query(Memecategory))
             user_model.photo = filename
 
             db.session.commit()

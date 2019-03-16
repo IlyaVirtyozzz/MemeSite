@@ -1,10 +1,6 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy, sqlalchemy
+from constant import *
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqldatabase.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+
 
 
 class Memeuser(db.Model):
