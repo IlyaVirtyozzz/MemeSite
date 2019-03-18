@@ -37,7 +37,6 @@ def questions(id_category=1):
 
 @app.route('/question/<int:id_question>', methods=['GET', 'POST'])
 def question(id_question=1):
-
     answers = db.session.query(Memeanswer).filter_by(id_question=id_question).all()
     question = db.session.query(Memequestion).filter_by(id=id_question).first()
     if request.method == 'GET':
@@ -56,26 +55,54 @@ def question(id_question=1):
 
 @app.route('/delete_question/<int:id_question>', methods=['GET', 'POST'])
 def delete_question(id_question=1):
-    if 'user_id' not in session:
-        return redirect('/error')
-    question = db.session.query(Memequestion).filter_by(id=id_question).first()
-    answers = db.session.query(Memeanswer).filter_by(id=id_question).all()
-    db.session.delete(question)
-    for i in answers:
-        db.session.delete(i)
+    try:
+        if 'user_id' not in session:
+            return redirect('/error')
+        question = db.session.query(Memequestion).filter_by(id=id_question).first()
+        answers = db.session.query(Memeanswer).filter_by(id=id_question).all()
 
-    db.session.commit()
-    return redirect('/profile')
+        for i in answers:
+            db.session.delete(i)
+        db.session.delete(question)
+        db.session.commit()
+        return redirect('/profile')
+    except Exception:
+        return redirect('/error')
 
 
 @app.route('/delete_answer/<int:id_question>/<int:id_answer>', methods=['GET', 'POST'])
 def delete_answer(id_question=1, id_answer=1):
-    if 'user_id' not in session:
+    try:
+        if 'user_id' not in session:
+            return redirect('/error')
+        answer = db.session.query(Memeanswer).filter_by(id=id_answer, id_question=id_question).first()
+        db.session.delete(answer)
+        db.session.commit()
+        return redirect('/profile')
+    except Exception:
         return redirect('/error')
-    answer = db.session.query(Memeanswer).filter_by(id=id_answer, id_question=id_question).first()
-    db.session.delete(answer)
-    db.session.commit()
-    return redirect('/profile')
+
+
+@app.route('/delete_user/<int:id_user>', methods=['GET', 'POST'])
+def delete_user(id_user):
+    try:
+        if 'user_id' not in session:
+            return redirect('/error')
+        if not db.session.query(Admins).filter_by(id_user=session['user_id']).first():
+            return redirect('/error')
+
+        question = db.session.query(Memequestion).filter_by(id_user=id_user).first()
+        answers = db.session.query(Memeanswer).filter_by(id_user=id_user).all()
+        user = db.session.query(Memeuser).filter_by(id=id_user).first()
+        for i in answers:
+            db.session.delete(i)
+        db.session.delete(question)
+        db.session.delete(user)
+
+        db.session.commit()
+        return redirect('/admin')
+    except Exception:
+        return redirect('/error')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -166,7 +193,6 @@ def login():
 
 @app.route('/leaders')
 def leaders():
-
     leaders = Memeuser.query.all()
     leaders_list = []
     for leader in leaders:
@@ -198,7 +224,12 @@ def help():
 
 @app.route('/admin')
 def admin_console():
-    return render_template('admin.html', title='Авторизация', users=user_n, news=news_n, len=len)
+    if 'user_id' not in session:
+        return redirect('/error')
+    if not db.session.query(Admins).filter_by(id_user=session['user_id']).first():
+        return redirect('/error')
+    users = db.session.query(Memeuser).all()
+    return render_template('admin.html', title='Админ', users=users)
 
 
 @app.route('/profile', methods=['GET', 'POST'])

@@ -5,14 +5,41 @@
     <thead>
     </thead>
     <tbody>
-    {% for i in range(len(users)) %}
+    {% for user in users %}
+    <div class="container">
+        <div class="p-3 mb-2 bg-secondary text-white ">
+            <div class="container">
+                <div class="row justify-content-md">
+                    <div class="col-9">
 
-
-    <tr>
-        <th scope="row">{{users[i][1]}}</th>
-        <td>{{ news[i][1]}}</td>
-    </tr>
-
+                        <h4>Имя: {{user.name}}</h4>
+                    </div>
+                    <div class="col-9">
+                        <h5>Id: {{user.id}}</h5>
+                    </div>
+                    <div class="col-9">
+                        <h5>Пароль: {{user.password}}</h5>
+                    </div>
+                     <div class="col-9">
+                        <h5>Email: {{user.email}}</h5>
+                    </div>
+                    <div class="col-9">
+                        <h5>Пол: {{user.sex}}</h5>
+                    </div>
+                    <div class="col-9">
+                        <h6>Баллы: {{user.point}}</h6>
+                    </div>
+                    <div class="col-9">
+                        <span class="badge badge-info">
+                                        <a class="text-white" href="/delete_user/{{user.id}}">
+                                            Удалить
+                                        </a>
+                                             </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endfor %}
     </tbody>
 </table>
