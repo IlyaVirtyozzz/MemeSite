@@ -11,25 +11,36 @@
                 <div class="container">
                     <div class="row justify-content-md-center">
                         <div class="col ">
-                            <img src="http://127.0.0.1:8070/{{user_check(question.id_user, db, Memeuser).photo}}" class="rounded"
+                            <img src="http://127.0.0.1:8070/{{user_check(question.id_user, db, Memeuser).photo}}"
+                                 class="rounded"
                                  width="50"
                                  height="50"
                                  alt="">
 
                             <h7>{{user_check(question.id_user,db, Memeuser).name}}</h7>
                         </div>
-                        <div class="col"><h3>{{question.title}}</h3>
-                            <h5>{{question.text}}</h5>
+                        <div class="col"><h4>{{question.title[:60]}}</h4>
+                            <h5>{{question.text[:30]}}</h5>
                         </div>
 
                         <div class="col-auto">
                             <h6>Доступно Баллов: {{question.point}}</h6>
                             <span class="badge badge-info  ">
-                                <a class="text-white" href="/question/1">
+                                <a class="text-white" href="/question/{{question.id}}">
                                 Открыть
                                 </a>
                             </span>
+                            {% if is_admin(session) %}
+                            <div class="col-9">
+                            <span class="badge badge-info">
+                                        <a class="text-white" href="/delete_question/{{question.id}}">
+                                            Удалить
+                                        </a>
+                                             </span>
+                            </div>
+                            {% endif %}
                         </div>
+
 
                     </div>
 
@@ -41,24 +52,34 @@
                 <div class="container">
                     <div class="row justify-content-md-center">
                         <div class="col ">
-                            <img src="http://127.0.0.1:8070/{{user_check(question.id_user, db, Memeuser).photo}}" class="rounded"
+                            <img src="http://127.0.0.1:8070/{{user_check(question.id_user, db, Memeuser).photo}}"
+                                 class="rounded"
                                  width="50"
                                  height="50"
                                  alt="">
 
                             <h7>{{user_check(question.id_user,db, Memeuser).name}}</h7>
                         </div>
-                        <div class="col"><h3>{{question.title}}</h3>
-                            <h5>{{question.text}}</h5>
+                        <div class="col"><h4>{{question.title[:60]}}</h4>
+                            <h5>{{question.text[:30]}}</h5>
                         </div>
 
                         <div class="col-auto">
                             <h6>Доступно Баллов: {{question.point}}</h6>
                             <span class="badge badge-info  ">
-                                <a class="text-white" href="/question/1">
+                                <a class="text-white" href="/question/{{question.id}}">
                                 Открыть
                                 </a>
                             </span>
+                            {% if is_admin(session) %}
+                            <div class="col-9">
+                            <span class="badge badge-info">
+                                        <a class="text-white" href="/delete_question/{{question.id}}/{{answer.id}}">
+                                            Удалить
+                                        </a>
+                                             </span>
+                            </div>
+                            {% endif %}
                         </div>
 
                     </div>

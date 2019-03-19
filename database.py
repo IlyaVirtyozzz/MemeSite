@@ -20,9 +20,11 @@ class Memeanswer(db.Model):
     id_user = db.Column(db.Integer, unique=False, nullable=False)
     id_question = db.Column(db.Integer, unique=False, nullable=False)
     text = db.Column(db.String(2000), unique=False, nullable=False)
+    point = db.Column(db.Integer, unique=False, nullable=False)
+    true = db.Column(db.Boolean)
 
     def __repr__(self):
-        return "<Memeuser {} {} {} >".format(self.id, self.id_user, self.text)
+        return "<Memeuser {} {} {} {} {}>".format(self.id, self.id_user, self.text, self.true, self.point)
 
 
 class Memecategory(db.Model):
@@ -64,21 +66,12 @@ def add_category():
         db.session.commit()
 
 
-def add_users():
-    for i in [('user_test_1@list.ru', 'User_1', 'male', 1111, 100),
-              ('user_test_2@list.ru', 'User_2', 'male', 1111, 300),
-              ('user_test_3@list.ru', 'User_3', 'male', 1111, 400),
-              ('user_test_4@list.ru', 'User_4', 'male', 1111, 600),
-              ('user_test_5@list.ru', 'User_5', 'male', 1111, 50)]:
-        user = Memeuser(email=i[0],
-                        name=i[1],
-                        sex=i[2],
-                        password=i[3],
-                        point=i[4], )
-
-        db.session.add(user)
-        db.session.commit()
+def add_admin(id_user):
+    admin = Admins(id_user=id_user)
+    db.session.add(admin)
+    db.session.commit()
 
 
 if __name__ == '__main__':
     db.create_all()
+    add_admin(1)

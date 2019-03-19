@@ -68,7 +68,7 @@
 
                                         </div>
                                         <div class="col">
-                                            <h5>{{answer.text}}</h5>
+                                            <h5>{{answer.text[:15]}}</h5>
                                         </div>
 
                                         <div class="col-auto">
@@ -114,8 +114,8 @@
                                             </h7>
 
                                         </div>
-                                        <div class="col"><h3>{{question.title}}</h3>
-                                            <h5>{{question.text}}</h5>
+                                        <div class="col"><h3>{{question.title[:15]}}</h3>
+                                            <h5>{{question.text[:15]}}</h5>
                                         </div>
 
                                         <div class="col-auto">
@@ -158,8 +158,8 @@
                                                 {{category.filter_by(id=question.id_category).first().category}}
                                             </h7>
                                         </div>
-                                        <div class="col"><h3>{{question.title}}</h3>
-                                            <h5>{{question.text}}</h5>
+                                        <div class="col"><h3>{{question.title[:15]}}</h3>
+                                            <h5>{{question.text[:15]}}</h5>
                                         </div>
 
                                         <div class="col-auto">
@@ -265,11 +265,12 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body">
-                                <input class="form-control mr-sm-2" type="text" placeholder="Новая почта"
-                                       name="NewEmail"
-                                       aria-label="NewEmail">
-                            </div>
+                                <div>
+
+                                    <input type="email" class="form-control" id="exampleInputEmail1" name="NewEmail"
+                                           aria-describedby="emailHelp" placeholder="Введите почту">
+                                </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                     Закрыть

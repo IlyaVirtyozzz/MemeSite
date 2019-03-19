@@ -5,23 +5,23 @@
     <div class="row justify-content-md-center">
         <div class="col-6">
             <ul class="list-group">
-                <li class="list-group-item">Лидеры</li>
+                <li class="list-group-item list-group-item-dark">Лидеры</li>
 
                 {% for n,i in enumerate(leaders) %}
                 {% if n == 0 %}
-                <li class="list-group-item list-group-item-dark">
+                <li class="list-group-item list-group-item-light">
                     <span class="badge badge-pill badge-danger">{{n+1}}</span> {{i[0]}} : {{i[1]}}
                 </li>
                 {% elif n == 1 %}
-                <li class="list-group-item list-group-item-dark">
+                <li class="list-group-item list-group-item-light">
                     <span class="badge badge-warning">{{n+1}}</span> {{i[0]}} : {{i[1]}}
                 </li>
                 {% elif n == 2 %}
-                <li class="list-group-item list-group-item-dark">
+                <li class="list-group-item list-group-item-light">
                     <span class="badge badge-pill badge-success">{{n+1}}</span> {{i[0]}} : {{i[1]}}
                 </li>
                 {% else %}
-                <li class="list-group-item list-group-item-dark">
+                <li class="list-group-item list-group-item-light">
                     <span class="badge badge-pill badge-primary">{{n+1}}</span> {{i[0]}} : {{i[1]}}
                 </li>
                 {% endif %}

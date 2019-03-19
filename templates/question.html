@@ -40,7 +40,15 @@
                     <div class="col-9"><h3>{{question.title}}</h3>
                         <h5>{{question.text}}</h5>
                     </div>
-
+                    <div class="col-9">
+                    {% if is_admin(session) %}
+                    <span class="badge badge-info">
+                                        <a class="text-white" href="/delete_question/{{question.id}}">
+                                            Удалить
+                                        </a>
+                                             </span>
+                    {% endif %}
+                    </div>
                     <div class="col-auto">
                         <h6>Баллов : {{question.point}}</h6>
 
@@ -50,12 +58,14 @@
         </div>
     </div>
     {% for answer in answers %}
+    {% if answer.true %}
     <div class="container">
-        <div class="p-3 mb-2 bg-secondary text-white ">
+        <div class="p-3 mb-2 bg-success text-white ">
             <div class="container">
                 <div class="row justify-content-md">
                     <div class="col ">
-                        <img src="http://127.0.0.1:8070/{{user_check(answer.id_user,db, Memeuser).photo}}" class="rounded" width="50"
+                        <img src="http://127.0.0.1:8070/{{user_check(answer.id_user,db, Memeuser).photo}}"
+                             class="rounded" width="50"
                              height="50"
                              alt="">
                         <h7>{{user_check(answer.id_user,db, Memeuser).name}}</h7>
@@ -63,21 +73,60 @@
                     <div class="col-9">
                         <h5>{{answer.text}}</h5>
                     </div>
+                    {% if question.id_user == session['user_id'] and question.active%}
                     <div class="col-auto">
-                        <h6>Полученные баллы: {{question.point}}</h6>
+                        <h6><a class="nav-link bg-success text-light" href="/true_answer/{{question.id}}/{{answer.id}}">Пожертвовать
+                            баллы</a></h6>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="container">
+        <div class="p-3 mb-2 bg-secondary text-white ">
+            <div class="container">
+                <div class="row justify-content-md">
+                    <div class="col ">
+                        <img src="http://127.0.0.1:8070/{{user_check(answer.id_user,db, Memeuser).photo}}"
+                             class="rounded" width="50"
+                             height="50"
+                             alt="">
+                        <h7>{{user_check(answer.id_user,db, Memeuser).name}}</h7>
+                    </div>
+                    <div class="col-9">
+                        <h5>{{answer.text}}</h5>
+                    </div>
+                    <div class="col-9">
+                        {% if is_admin(session) %}
+                        <span class="badge badge-info">
+                                        <a class="text-white" href="/delete_answer/{{question.id}}/{{answer.id}}">
+                                            Удалить
+                                        </a>
+                                             </span>
+                        {% endif %}
+                    </div>
+                    {% if question.id_user == session['user_id'] and question.active%}
+                    <div class="col-auto">
+                        <h6><a class="nav-link bg-success text-light" href="/true_answer/{{question.id}}/{{answer.id}}">Пожертвовать
+                            баллы</a></h6>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% endfor %}
     <form method="post">
         <div class="form-group">
-            <label for="exampleFormControlTextarea1">Добавить комментарий</label>
+            <label for="exampleFormControlTextarea1">Добавить ответ</label>
             <textarea class="form-control" id="exampleFormControlTextarea1" name='text' rows="3"></textarea>
         </div>
         <div class="row justify-content-md-center">
-            <button type="submit" class="btn btn-info">Добавить комментарий</button>
+            <button type="submit" class="btn btn-info">Добавить ответ</button>
         </div>
     </form>
 </div>
