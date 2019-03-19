@@ -53,13 +53,10 @@ def register():
 
 @app.route('/questions/<int:id_category>/<int:active>', methods=['GET', 'POST'])
 def questions(id_category=1, active=1):
-    try:
-        questions = filter_answer(id_category, active)
-        if request.method == 'GET':
-            return render_template('questions.html', title='Вопросы', questions=questions, user_check=user_check,
-                                   Memeuser=Memeuser, db=db, session=session, is_admin=is_admin)
-    except Exception:
-        return redirect('/error')
+    questions = filter_answer(id_category, active)
+    if request.method == 'GET':
+        return render_template('questions.html', title='Вопросы', questions=questions, user_check=user_check,
+                               Memeuser=Memeuser, db=db, session=session, is_admin=is_admin)
 
 
 @app.route('/true_answer/<int:id_question>/<int:id_answer>', methods=['GET', 'POST'])
@@ -127,7 +124,7 @@ def delete_answer(id_question, id_answer):
         if 'user_id' not in session:
             return redirect('/error')
 
-        if not is_user_answer(id_question, id_answer, session['user_id']):
+        if not (is_user_answer(id_question, id_answer, session['user_id']) or is_admin(session)):
             return redirect('/error')
 
         if not delete_answer_func(id_question, id_answer):
