@@ -3,14 +3,18 @@ from flask import url_for
 import shutil, os
 
 
+# Зарегестрирован ли пользователь?
 def user_check(id_user, db, Memeuser):
     return db.session.query(Memeuser).filter_by(id=id_user).first()
 
 
+# Админ ли пользователь?
 def is_admin(session):
-    return db.session.query(Admins).filter_by(id_user=session['user_id']).first()
+    if 'user_id' in session:
+        return db.session.query(Admins).filter_by(id_user=session['user_id']).first()
 
 
+# Вопрос пользователя?
 def is_user_question(id_question, id_user):
     question = db.session.query(Memequestion).filter_by(id=id_question).first()
     if question:
@@ -18,6 +22,7 @@ def is_user_question(id_question, id_user):
     return None
 
 
+# Ответ пользователя?
 def is_user_answer(id_question, id_answer, id_user):
     answer = db.session.query(Memeanswer).filter_by(id=id_answer, id_question=id_question).first()
     if answer:
@@ -25,12 +30,14 @@ def is_user_answer(id_question, id_answer, id_user):
     return None
 
 
+# Закрыть вопрос
 def close_question_func(id_question):
     question = db.session.query(Memequestion).filter_by(id=id_question).first()
     question.active = False
     db.session.commit()
 
 
+# Выбор правильного ответа
 def true_answer_func(id_question, id_answer, session):
     answer = db.session.query(Memeanswer).filter_by(id_question=id_question, id=id_answer).first()
     question = db.session.query(Memequestion).filter_by(id=id_question).first()
@@ -46,6 +53,7 @@ def true_answer_func(id_question, id_answer, session):
         db.session.commit()
 
 
+# Создание нового пользователя
 def add_new_user(email, user_name, sex, password):
     user = Memeuser(email=email,
                     name=user_name,
@@ -67,7 +75,8 @@ def add_new_user(email, user_name, sex, password):
     return user
 
 
-def filter_answer(id_category, active):
+# Фильтрация вопросов
+def filter_questions(id_category, active):
     if id_category == 1:
         questions = db.session.query(Memequestion).all()
     else:
@@ -78,6 +87,7 @@ def filter_answer(id_category, active):
         return sorted(questions, key=lambda x: x.active, reverse=True)
 
 
+# Добавление вопроса
 def add_question_func(title, text, points, id_category, user_model):
     question = Memequestion(id_user=user_model.id,
                             title=title,
@@ -92,6 +102,7 @@ def add_question_func(title, text, points, id_category, user_model):
     return question
 
 
+# Вход пользователя
 def login_func(email, password, session):
     user_model = db.session.query(Memeuser).filter_by(email=email).first()
     if user_model and user_model.password == password:
@@ -103,12 +114,14 @@ def login_func(email, password, session):
         return False
 
 
+# Добавление ответа
 def add_answer_func(session, id_question, text, point):
     answer = Memeanswer(id_user=session['user_id'], id_question=id_question, text=text, true=False, point=point)
     db.session.add(answer)
     db.session.commit()
 
 
+# Удаление пользователя
 def delete_user_func(id_user):
     if id_user:
         question = db.session.query(Memequestion).filter_by(id_user=id_user).first()
@@ -134,6 +147,7 @@ def delete_user_func(id_user):
     return None
 
 
+# Удаление вопроса
 def delete_question_func(id_question):
     if id_question:
         question = db.session.query(Memequestion).filter_by(id=id_question).first()
@@ -150,6 +164,7 @@ def delete_question_func(id_question):
     return
 
 
+# Удаление ответа
 def delete_answer_func(id_question, id_answer):
     if id_question and id_answer:
         answer = db.session.query(Memeanswer).filter_by(id=id_answer, id_question=id_question).first()

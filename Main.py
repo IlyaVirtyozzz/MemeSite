@@ -53,7 +53,7 @@ def register():
 
 @app.route('/questions/<int:id_category>/<int:active>', methods=['GET', 'POST'])
 def questions(id_category=1, active=1):
-    questions = filter_answer(id_category, active)
+    questions = filter_questions(id_category, active)
     if request.method == 'GET':
         return render_template('questions.html', title='Вопросы', questions=questions, user_check=user_check,
                                Memeuser=Memeuser, db=db, session=session, is_admin=is_admin)
@@ -237,8 +237,6 @@ def profile():
             return render_template('profile.html', title='Профиль', user_model=user_model, questions=questions,
                                    category=db.session.query(Memecategory), answers=answers)
         elif request.method == 'POST':
-            text = ''
-            incorrect = False
             if request.form.get('NewName'):
                 user_model.name = request.form.get('NewName')
                 db.session.commit()
@@ -256,7 +254,7 @@ def profile():
                                request.files.get('file').mimetype.split('/')[1]
                 else:
                     text += 'Это разрешение не поддерживается'
-                    return render_template('profile.html', title='Профиль', text=text, incorrect=incorrect,
+                    return render_template('profile.html', title='Профиль',
                                            user_model=user_model, category=db.session.query(Memecategory))
                 user_model.photo = filename
 
@@ -268,11 +266,8 @@ def profile():
                           'wb') as photo:
                     photo.write(request.files.get('file').read())
                 return redirect('/profile')
-            else:
-                text = 'Введите корректные данные'
-                incorrect = True
 
-            return render_template('profile.html', title='Профиль', text=text, incorrect=incorrect,
+            return render_template('profile.html', title='Профиль',
                                    user_model=user_model, category=db.session.query(Memecategory))
     except Exception:
         return redirect('/error')
