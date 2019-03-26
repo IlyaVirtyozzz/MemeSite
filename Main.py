@@ -4,6 +4,7 @@ from flask import url_for, request, render_template, redirect, session
 from constant import *
 from flask_sqlalchemy import sqlalchemy
 from database import *
+from MemePepedia import *
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -139,11 +140,11 @@ def delete_answer(id_question, id_answer):
 def delete_user(id_user):
     try:
         if 'user_id' not in session:
-            return redirect('/error')
+            return redirect('/login')
         if not is_admin(session):
-            return redirect('/error')
+            return redirect('/login')
         if session['user_id'] == id_user:
-            return redirect('/error')
+            return redirect('/login')
         if not delete_user_func(id_user):
             return redirect('/error')
 
@@ -277,6 +278,19 @@ def profile():
 def logout():
     session.clear()
     return redirect('/login')
+
+
+@app.route('/MemeText/<int:number>')
+def memewiki_text(number):
+    dictionary = MemeWiki.query.filter(MemeWiki.id == number + 1).first()
+    return render_template('MemeText.html', number=number + 1, dictionary=dictionary, title=dictionary.name_article)
+
+
+@app.route('/memewiki')
+def memewiki():
+    dictionary = MemeWiki.query.all()
+    number = len(dictionary)
+    return render_template('MemePedia.html', number=number, dictionary=dictionary, title='МемеПедиа')
 
 
 if __name__ == '__main__':

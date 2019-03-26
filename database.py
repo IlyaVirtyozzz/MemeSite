@@ -59,8 +59,9 @@ class Memequestion(db.Model):
 
 
 def add_category():
-    for i in ['Все подряд', 'Политика', 'Животные', 'Игры', 'Русские', '18+', 'Аниме', 'Ностальгия',
-              'Техно-научные', 'АнтиK-pop', 'Другие']:
+    categorys = ['Все подряд', 'Политика', 'Животные', 'Игры', 'Русские', '18+', 'Аниме', 'Ностальгия',
+                 'Техно-научные', 'АнтиK-pop', 'Другие']
+    for i in categorys:
         category = Memecategory(category=i)
         db.session.add(category)
         db.session.commit()

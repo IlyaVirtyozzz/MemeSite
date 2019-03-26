@@ -65,7 +65,7 @@ def add_new_user(email, user_name, sex, password):
     db.session.add(user)
     db.session.commit()
 
-    newpath = r'C:\Users\ilyam\PycharmProjects\MemeSite\static\{}\\'.format(user.id)
+    newpath = r'\static\{}\\'.format(user.id)
     if not os.path.exists(newpath):
         os.makedirs(newpath)
     shutil.copy(r'static/image.jpg', r'static/{}/'.format(user.id))
