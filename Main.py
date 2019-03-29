@@ -254,16 +254,15 @@ def profile():
                     filename = 'static/{}'.format(user_model.id) + '/image_.' + \
                                request.files.get('file').mimetype.split('/')[1]
                 else:
-                    text += 'Это разрешение не поддерживается'
                     return render_template('profile.html', title='Профиль',
                                            user_model=user_model, category=db.session.query(Memecategory))
                 user_model.photo = filename
 
                 db.session.commit()
-                with open(r"C:\Users\ilyam\PycharmProjects\MemeSite\static\{}\{}".format(user_model.id, '/image_.' +
-                                                                                                        request.files.get(
-                                                                                                            'file').mimetype.split(
-                                                                                                            '/')[1]),
+                with open(r"/static/{}/{}".format(user_model.id, '/image_.' +
+                                                                 request.files.get(
+                                                                     'file').mimetype.split(
+                                                                     '/')[1]),
                           'wb') as photo:
                     photo.write(request.files.get('file').read())
                 return redirect('/profile')
@@ -291,6 +290,28 @@ def memewiki():
     dictionary = MemeWiki.query.all()
     number = len(dictionary)
     return render_template('MemePedia.html', number=number, dictionary=dictionary, title='МемеПедиа')
+
+
+@app.route('/create_memewiki', methods=['GET', 'POST'])
+def add_wiki():
+    try:
+
+        if request.method == 'GET':
+            return render_template('WikiForm.html')
+        elif request.method == 'POST':
+            name = request.form['name']
+            name_article = request.form['name_article']
+            content = request.form['content']
+            imagePath = '/static/MemePediaImageStandart.jpg'
+            if request.files['image']:
+                f = request.files['image']
+                imagePath = '/static/{}.png'.format('-'.join([name, name_article]))
+                f.save(imagePath)
+            if name and content and name_article:
+                add_new_wiki(name, name_article, content, imagePath)
+    except Exception as ex:
+        print(ex)
+        return redirect('/error')
 
 
 if __name__ == '__main__':
