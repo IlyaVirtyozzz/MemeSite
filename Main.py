@@ -1,10 +1,11 @@
 import os
+import datetime
 from functions import *
 from flask import url_for, request, render_template, redirect, session
 from constant import *
 from flask_sqlalchemy import sqlalchemy
 from database import *
-from MemePepedia import *
+from sqlalchemy import func
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -281,38 +282,60 @@ def logout():
 
 @app.route('/MemeText/<int:number>')
 def memewiki_text(number):
-    dictionary = MemeWiki.query.filter(MemeWiki.id == number + 1).first()
+    dictionary = MemeWiki.query.filter(MemeWiki.id == number).first()
     return render_template('MemeText.html', number=number + 1, dictionary=dictionary, title=dictionary.name_article)
 
 
 @app.route('/memewiki')
 def memewiki():
+    delet = True
+    if 'user_id' not in session:
+        delet = False
+    if not is_admin(session):
+        delet = False
     dictionary = MemeWiki.query.all()
     number = len(dictionary)
-    return render_template('MemePedia.html', number=number, dictionary=dictionary, title='МемеПедиа')
+    return render_template('MemePedia.html', number=number-1, dictionary=dictionary, title='МемеПедиа', delet=delet)
+
+
+@app.route('/del_wiki/<int:number>')
+def delete_wiki_func(number):
+    del_new_wiki(number)
+    return 'Успешно'
 
 
 @app.route('/create_memewiki', methods=['GET', 'POST'])
 def add_wiki():
     try:
-
-        if request.method == 'GET':
-            return render_template('WikiForm.html')
-        elif request.method == 'POST':
-            name = request.form['name']
-            name_article = request.form['name_article']
-            content = request.form['content']
-            imagePath = '/static/MemePediaImageStandart.jpg'
-            if request.files['image']:
-                f = request.files['image']
-                imagePath = '/static/{}.png'.format('-'.join([name, name_article]))
-                f.save(imagePath)
-            if name and content and name_article:
-                add_new_wiki(name, name_article, content, imagePath)
+        if 'user_id' in session:
+            if request.method == 'GET':
+                return render_template('WikiForm.html')
+            elif request.method == 'POST':
+                name = request.form['name']
+                name_article = request.form['name_article']
+                content = request.form['content']
+                print(1)
+                file = request.files['photo']
+                filename = file.filename or ''
+                if filename:
+                    filename = '{}-{}'.format(datetime.date.today(), filename)
+                    if filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith(
+                            '.bmp'):
+                        file.save(os.path.join('static/MemePedia/', filename))
+                    else:
+                        return redirect('/create_memewiki')
+                print(name, content, name_article)
+                if content and name_article and filename:
+                    add_new_wiki(name, name_article, content, '/static/MemePedia/' + filename)
+                else:
+                    return redirect('/create_memewiki')
+                return redirect('/memewiki')
+        else:
+            return redirect('/login')
     except Exception as ex:
         print(ex)
         return redirect('/error')
 
 
 if __name__ == '__main__':
-    app.run(port=8070, host='127.0.0.1')
+    app.run(port=8080, host='127.0.0.1')

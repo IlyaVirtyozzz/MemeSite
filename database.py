@@ -78,6 +78,13 @@ def add_new_wiki(name, name_article, content, photo='/static/MemePediaImageStand
 
     db.session.add(wiki)
     db.session.commit()
+    return None
+
+
+def del_new_wiki(id):
+    MemeWiki.query.filter_by(id=id).delete()
+    db.session.commit()
+    return None
 
 
 def add_category():
