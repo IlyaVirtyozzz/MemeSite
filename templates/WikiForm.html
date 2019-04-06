@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="alert alert-dark" role="alert" ><H1>Добавить статью</H1>
+    <form method="post" enctype="multipart/form-data">
+        <input type="name" class="form-control" id="name"  placeholder="Введите свой псевдоним" name="name">
+        <input type="name_article" class="form-control" id="name_article"  placeholder="Введи название статьи" name="name_article">
+        <textarea class="form-control" id="content" rows="3" name="content" placeholder="Здесь будет текст твоей статьи (не более 5К символов)"></textarea>
+        <input type = "file" id = "photo" name = "photo">
+        <button type="submit" class="btn btn-primary">Добавить статью</button>
+    </form>
+
+</div>
+{% endblock %}
