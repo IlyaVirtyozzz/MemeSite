@@ -1,0 +1,2 @@
+[0329/213854.572:ERROR:filesystem_win.cc(148)] DeleteFile C:\Users\SanyaBetcoin\AppData\Local\Google\Chrome\User Data\Crashpad\reports\aca070ad-39ec-4088-9db6-831e8aa3abec.dmp: Процесс не может получить доступ к файлу, так как этот файл занят другим процессом. (0x20)
+[0329/213858.161:ERROR:registration_protocol_win.cc(84)] TransactNamedPipe: Канал был закрыт. (0x6D)

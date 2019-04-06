@@ -1,9 +1,11 @@
 import os
+import datetime
 from functions import *
 from flask import url_for, request, render_template, redirect, session
 from constant import *
 from flask_sqlalchemy import sqlalchemy
 from database import *
+from sqlalchemy import func
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -139,11 +141,11 @@ def delete_answer(id_question, id_answer):
 def delete_user(id_user):
     try:
         if 'user_id' not in session:
-            return redirect('/error')
+            return redirect('/login')
         if not is_admin(session):
-            return redirect('/error')
+            return redirect('/login')
         if session['user_id'] == id_user:
-            return redirect('/error')
+            return redirect('/login')
         if not delete_user_func(id_user):
             return redirect('/error')
 
@@ -253,16 +255,15 @@ def profile():
                     filename = 'static/{}'.format(user_model.id) + '/image_.' + \
                                request.files.get('file').mimetype.split('/')[1]
                 else:
-                    text += 'Это разрешение не поддерживается'
                     return render_template('profile.html', title='Профиль',
                                            user_model=user_model, category=db.session.query(Memecategory))
                 user_model.photo = filename
 
                 db.session.commit()
-                with open(r"C:\Users\ilyam\PycharmProjects\MemeSite\static\{}\{}".format(user_model.id, '/image_.' +
-                                                                                                        request.files.get(
-                                                                                                            'file').mimetype.split(
-                                                                                                            '/')[1]),
+                with open(r"/static/{}/{}".format(user_model.id, '/image_.' +
+                                                                 request.files.get(
+                                                                     'file').mimetype.split(
+                                                                     '/')[1]),
                           'wb') as photo:
                     photo.write(request.files.get('file').read())
                 return redirect('/profile')
@@ -279,5 +280,62 @@ def logout():
     return redirect('/login')
 
 
+@app.route('/MemeText/<int:number>')
+def memewiki_text(number):
+    dictionary = MemeWiki.query.filter(MemeWiki.id == number).first()
+    return render_template('MemeText.html', number=number + 1, dictionary=dictionary, title=dictionary.name_article)
+
+
+@app.route('/memewiki')
+def memewiki():
+    delet = True
+    if 'user_id' not in session:
+        delet = False
+    if not is_admin(session):
+        delet = False
+    dictionary = MemeWiki.query.all()
+    number = len(dictionary)
+    return render_template('MemePedia.html', number=number-1, dictionary=dictionary, title='МемеПедиа', delet=delet)
+
+
+@app.route('/del_wiki/<int:number>')
+def delete_wiki_func(number):
+    del_new_wiki(number)
+    return 'Успешно'
+
+
+@app.route('/create_memewiki', methods=['GET', 'POST'])
+def add_wiki():
+    try:
+        if 'user_id' in session:
+            if request.method == 'GET':
+                return render_template('WikiForm.html')
+            elif request.method == 'POST':
+                name = request.form['name']
+                name_article = request.form['name_article']
+                content = request.form['content']
+                print(1)
+                file = request.files['photo']
+                filename = file.filename or ''
+                if filename:
+                    filename = '{}-{}'.format(datetime.date.today(), filename)
+                    if filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith(
+                            '.bmp'):
+                        file.save(os.path.join('static/MemePedia/', filename))
+                    else:
+                        return redirect('/create_memewiki')
+                print(name, content, name_article)
+                if content and name_article and filename:
+                    add_new_wiki(name, name_article, content, '/static/MemePedia/' + filename)
+                else:
+                    return redirect('/create_memewiki')
+                return redirect('/memewiki')
+        else:
+            return redirect('/login')
+    except Exception as ex:
+        print(ex)
+        return redirect('/error')
+
+
 if __name__ == '__main__':
-    app.run(port=8070, host='127.0.0.1')
+    app.run(port=8080, host='127.0.0.1')

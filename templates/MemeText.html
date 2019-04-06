@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    {%if dictionary.photo%}
+    <img src="{{dictionary.photo}}">
+    {%endif%}
+    <H1>{{dictionary.name_article}}</H1>
+    <p>{{dictionary.content}}</p>
+    <a href="/memewiki"><p align="right">Вернуться на главную</p></a>
+</div>
+{% endblock %}

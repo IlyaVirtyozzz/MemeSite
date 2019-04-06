@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href="/create_memewiki"><img src="static/MemePedia/add_wiki.png"></a>
+{% for i in range(number,-1,-1) %}
+<div class="alert alert-danger" role="alert">
+    <H6 align="left">{{dictionary[i].name}} </H6>
+    <a href="/MemeText/{{dictionary[i].id}}" align="center"><h1>{{dictionary[i].name_article}}</h1></a>
+    {% if dictionary[i].photo%}
+    <center>
+        <a href="/MemeText/{{dictionary[i].id}}"><img src="{{dictionary[i].photo}}"></a>
+    </center>
+    {%endif%}
+    {% if delet%}
+    <br>
+    <a href="/del_wiki/{{dictionary[i].id}}"><p align="right">Удалить?</p></a>
+    {%endif%}
+
+</div>
+{%endfor%}
+{% endblock %}
