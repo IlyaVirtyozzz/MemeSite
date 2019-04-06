@@ -1,5 +1,6 @@
 from database import *
 from flask import url_for
+from constant import PATH
 import shutil, os
 
 
@@ -65,9 +66,10 @@ def add_new_user(email, user_name, sex, password):
     db.session.add(user)
     db.session.commit()
 
-    newpath = r'\static\{}\\'.format(user.id)
+    newpath = PATH + '/static/{}/'.format(user.id)
     if not os.path.exists(newpath):
-        os.makedirs(newpath)
+        os.mkdir(newpath)
+
     shutil.copy(r'static/image.jpg', r'static/{}/'.format(user.id))
     user.photo = 'static/{}/image.jpg'.format(user.id)
     db.session.commit()

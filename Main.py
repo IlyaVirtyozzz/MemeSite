@@ -228,50 +228,47 @@ def admin_console():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    try:
-        if 'user_id' not in session:
-            return redirect('/error')
-        user_model = user_check(session['user_id'], db, Memeuser)
-        questions = db.session.query(Memequestion).filter_by(id_user=user_model.id).all()
-        answers = db.session.query(Memeanswer).filter_by(id_user=user_model.id).all()
-
-        if request.method == 'GET':
-            return render_template('profile.html', title='Профиль', user_model=user_model, questions=questions,
-                                   category=db.session.query(Memecategory), answers=answers)
-        elif request.method == 'POST':
-            if request.form.get('NewName'):
-                user_model.name = request.form.get('NewName')
-                db.session.commit()
-                session['username'] = user_model.name
-            if request.form.get('NewEmail'):
-                user_model.email = request.form.get('NewEmail')
-                db.session.commit()
-            if request.form.get('NewPassword') and request.form.get('OldPassword') == user_model.password:
-                user_model.password = request.form.get('NewPassword')
-                db.session.commit()
-
-            if request.files.get('file'):
-                if request.files.get('file').mimetype.split('/')[1] in IMAGE_RESOLUTION:
-                    filename = 'static/{}'.format(user_model.id) + '/image_.' + \
-                               request.files.get('file').mimetype.split('/')[1]
-                else:
-                    return render_template('profile.html', title='Профиль',
-                                           user_model=user_model, category=db.session.query(Memecategory))
-                user_model.photo = filename
-
-                db.session.commit()
-                with open(r"/static/{}/{}".format(user_model.id, '/image_.' +
-                                                                 request.files.get(
-                                                                     'file').mimetype.split(
-                                                                     '/')[1]),
-                          'wb') as photo:
-                    photo.write(request.files.get('file').read())
-                return redirect('/profile')
-
-            return render_template('profile.html', title='Профиль',
-                                   user_model=user_model, category=db.session.query(Memecategory))
-    except Exception:
+    if 'user_id' not in session:
         return redirect('/error')
+    user_model = user_check(session['user_id'], db, Memeuser)
+    questions = db.session.query(Memequestion).filter_by(id_user=user_model.id).all()
+    answers = db.session.query(Memeanswer).filter_by(id_user=user_model.id).all()
+
+    if request.method == 'GET':
+        return render_template('profile.html', title='Профиль', user_model=user_model, questions=questions,
+                               category=db.session.query(Memecategory), answers=answers)
+    elif request.method == 'POST':
+        if request.form.get('NewName'):
+            user_model.name = request.form.get('NewName')
+            db.session.commit()
+            session['username'] = user_model.name
+        if request.form.get('NewEmail'):
+            user_model.email = request.form.get('NewEmail')
+            db.session.commit()
+        if request.form.get('NewPassword') and request.form.get('OldPassword') == user_model.password:
+            user_model.password = request.form.get('NewPassword')
+            db.session.commit()
+
+        if request.files.get('file'):
+            if request.files.get('file').mimetype.split('/')[1] in IMAGE_RESOLUTION:
+                filename = 'static/{}'.format(user_model.id) + '/image_.' + \
+                           request.files.get('file').mimetype.split('/')[1]
+            else:
+                return render_template('profile.html', title='Профиль',
+                                       user_model=user_model, category=db.session.query(Memecategory))
+            user_model.photo = filename
+            print(filename)
+            db.session.commit()
+            with open(PATH+"/static/{}/{}".format(user_model.id, 'image_.' +
+                                                             request.files.get(
+                                                                 'file').mimetype.split(
+                                                                 '/')[1]),
+                      'wb') as photo:
+                photo.write(request.files.get('file').read())
+            return redirect('/profile')
+
+        return render_template('profile.html', title='Профиль',
+                               user_model=user_model, category=db.session.query(Memecategory))
 
 
 @app.route('/logout')
@@ -295,7 +292,7 @@ def memewiki():
         delet = False
     dictionary = MemeWiki.query.all()
     number = len(dictionary)
-    return render_template('MemePedia.html', number=number-1, dictionary=dictionary, title='МемеПедиа', delet=delet)
+    return render_template('MemePedia.html', number=number - 1, dictionary=dictionary, title='МемеПедиа', delet=delet)
 
 
 @app.route('/del_wiki/<int:number>')
@@ -314,7 +311,7 @@ def add_wiki():
                 name = request.form['name']
                 name_article = request.form['name_article']
                 content = request.form['content']
-                print(1)
+
                 file = request.files['photo']
                 filename = file.filename or ''
                 if filename:
@@ -324,7 +321,7 @@ def add_wiki():
                         file.save(os.path.join('static/MemePedia/', filename))
                     else:
                         return redirect('/create_memewiki')
-                print(name, content, name_article)
+
                 if content and name_article and filename:
                     add_new_wiki(name, name_article, content, '/static/MemePedia/' + filename)
                 else:
@@ -338,4 +335,4 @@ def add_wiki():
 
 
 if __name__ == '__main__':
-    app.run(port=8080, host='127.0.0.1')
+    app.run(port=8070, host='127.0.0.1')
