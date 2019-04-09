@@ -298,7 +298,8 @@ def memewiki():
 @app.route('/del_wiki/<int:number>')
 def delete_wiki_func(number):
     del_new_wiki(number)
-    return 'Успешно'
+
+    return redirect('/memewiki')
 
 
 @app.route('/create_memewiki', methods=['GET', 'POST'])
